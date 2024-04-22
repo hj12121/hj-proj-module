@@ -10,7 +10,7 @@ class PubSubClient:
         project_id: str,
         topic: str,
     ):
-        logger.info(f"Creating publisher client")
+        logger.info(f"Creating publisher client..")
         self._publisher_client = pubsub_v1.PublisherClient()
 
         self._topic_path = self._publisher_client.topic_path(
