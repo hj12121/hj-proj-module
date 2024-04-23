@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hj-proj-module"
-version = "0.1.10"
+version = "0.1.11"
 description = "Packages for HJ Projects"
 authors = ["Hojung Yun <hojung.yun@gmail.com>"]
 readme = "README.md"
