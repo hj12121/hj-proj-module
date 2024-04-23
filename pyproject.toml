@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hj-proj-module"
-version = "0.1.12"
+version = "0.1.13"
 description = "Packages for HJ Projects"
 authors = ["Hojung Yun <hojung.yun@gmail.com>"]
 readme = "README.md"
@@ -22,6 +22,7 @@ include = [
 python = "^3.11"
 google-cloud-pubsub = "^2.21.1"
 orjson = "^3.10.1"
+python-json-logger = "^2.0.7"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.7.0"
