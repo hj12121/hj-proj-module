@@ -23,7 +23,7 @@ def get_json_formatter(prefix: str):
 
 
 def set_logging_config(
-    prefix: str = "", is_json_formatter: bool = False, log_level: int = logging.INFO
+    prefix: str = "", use_json_formatter: bool = False, log_level: str = "INFO"
 ):
     logging.config.dictConfig(
         {
@@ -42,7 +42,7 @@ def set_logging_config(
             "handlers": {
                 "console": {
                     "class": "logging.StreamHandler",
-                    "formatter": "json" if is_json_formatter else "detail",
+                    "formatter": "json" if use_json_formatter else "detail",
                 },
             },
             "loggers": {
