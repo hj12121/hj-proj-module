@@ -1,5 +1,7 @@
 import logging
 from google.cloud import pubsub_v1
+from google.oauth2 import service_account
+from google.auth import default
 
 logger = logging.getLogger(__name__)
 
@@ -9,9 +11,25 @@ class PubSubClient:
         self,
         project_id: str,
         topic: str,
+        keyfile_path: None | str = None,
     ):
         logger.info(f"Creating publisher client..")
-        self._publisher_client = pubsub_v1.PublisherClient()
+
+        if keyfile_path:
+            logger.info("Creating credentials with SA keyfile..")
+            self._credentials = service_account.Credentials.from_service_account_file(
+                keyfile_path
+            )
+        else:
+            # https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to
+            logger.info(
+                "Creating credentials with Application Default Credentials (ADC).."
+            )
+            self._credentials, _ = default()
+
+        self._publisher_client = pubsub_v1.PublisherClient(
+            credentials=self._credentials
+        )
 
         self._topic_path = self._publisher_client.topic_path(
             project_id,
