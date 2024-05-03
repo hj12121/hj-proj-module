@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum, auto, Flag
 
 
 @dataclass
@@ -15,6 +16,12 @@ class StockAnalysisEvent:
 
 @dataclass
 class NotificationEvent:
+    class Types(Flag):
+        EMAIL = auto()
+        SMS = auto()
+        TELEGRAM = auto()
+
+    user_id: str
     title: str
-    body: str
-    email: str
+    msg: str
+    type: Types
