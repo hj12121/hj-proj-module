@@ -1,4 +1,6 @@
-from dataclasses import dataclass
+import orjson
+import base64
+from dataclasses import dataclass, asdict
 from enum import Enum, auto, Flag
 
 
@@ -34,3 +36,17 @@ class NotificationEvent:
             msg=d["msg"],
             type=cls.Types(d["type"]),
         )
+
+    @classmethod
+    def from_base64_str(cls, s: str):
+        base64_decoded_bytes: bytes = base64.b64decode(s)
+        d: dict = orjson.loads(base64_decoded_bytes)
+        return cls(
+            user_id=d["user_id"],
+            title=d["title"],
+            msg=d["msg"],
+            type=cls.Types(d["type"]),
+        )
+
+    def to_bytes(self) -> bytes:
+        return orjson.dumps(asdict(self), option=orjson.OPT_NAIVE_UTC)
