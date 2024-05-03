@@ -25,3 +25,12 @@ class NotificationEvent:
     title: str
     msg: str
     type: Types
+
+    @classmethod
+    def from_dict(cls, d: dict):
+        return cls(
+            user_id=d["user_id"],
+            title=d["title"],
+            msg=d["msg"],
+            type=cls.Types(d["type"]),
+        )
