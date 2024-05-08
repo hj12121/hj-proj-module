@@ -8,12 +8,7 @@ from enum import Enum, auto, Flag
 class ReportJobEvent:
     report_jod_id: int
     symbol: str
-    start: str
-    end: str
-
-    @property
-    def get_key(self):
-        return f"{self.symbol}_{self.start}_{self.end}"
+    past_months: int
 
 
 @dataclass
