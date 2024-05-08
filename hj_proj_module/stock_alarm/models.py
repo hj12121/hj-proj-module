@@ -6,7 +6,6 @@ from enum import Enum, auto, Flag
 
 @dataclass
 class ReportJobEvent:
-    username: str
     report_jod_id: int
     symbol: str
     start: str
