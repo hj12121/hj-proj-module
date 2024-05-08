@@ -5,6 +5,19 @@ from enum import Enum, auto, Flag
 
 
 @dataclass
+class ReportJobEvent:
+    username: str
+    report_jod_id: int
+    symbol: str
+    start: str
+    end: str
+
+    @property
+    def get_key(self):
+        return f"{self.symbol}_{self.start}_{self.end}"
+
+
+@dataclass
 class StockAnalysisEvent:
     symbol: str
     start: str
