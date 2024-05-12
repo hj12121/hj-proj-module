@@ -10,13 +10,13 @@ logger = logging.getLogger(__name__)
 
 
 class PubSubClient:
-    """PubSubClient v0.1.2"""
+    """PubSubClient v0.1.4"""
 
     def __init__(
         self,
         project_id: str,
+        topic_name: str,
         keyfile_path: None | str = None,
-        topic_name: None | str = None,
         subscription_name: None | str = None,  # publisher에서 필요없음
     ):
         if keyfile_path:
@@ -43,9 +43,6 @@ class PubSubClient:
                     credentials=self._credentials
                 )
                 logger.info(f"Creating topic")
-                self._topic_path = self._publisher_client.topic_path(
-                    self._project_id, self._topic_name
-                )
                 self._create_topic()
             if subscription_name:
                 logger.info(f"Creating subscriber client")
@@ -53,13 +50,20 @@ class PubSubClient:
                     credentials=self._credentials
                 )
                 logger.info(f"Creating subscription")
-                self._subscription_path = self._subscriber_client.subscription_path(
-                    self._project_id, self._subscription_name
-                )
                 self._create_subscription()
         except Exception:
             logger.exception("Failed to create Pub/Sub topic and subscription")
             raise
+
+    @property
+    def _topic_path(self):
+        return self._publisher_client.topic_path(self._project_id, self._topic_name)
+
+    @property
+    def _subscription_path(self):
+        return self._subscriber_client.subscription_path(
+            self._project_id, self._subscription_name
+        )
 
     def _create_topic(self):
         # Check if the topic exists, if not, create the topic.
@@ -87,11 +91,12 @@ class PubSubClient:
             )
         except NotFound:
             logger.info(
-                f"Subscription ({self._subscription_path=}) hasn't been found. Create the topic..."
+                f"Subscription ({self._subscription_path=}) hasn't been found. Create the subscription..."
             )
 
             self.subscription = self._subscriber_client.create_subscription(
                 request={"name": self._subscription_path, "topic": self._topic_path}
+                # request={"name": self._subscription_path, "topic": self._topic_name}
             )
             logger.info(f"{self.subscription.name} subscription has been created.")
 
