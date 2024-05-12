@@ -1,5 +1,6 @@
 import logging
 from google.cloud import pubsub_v1
+from google.cloud.pubsub_v1 import PublisherClient, SubscriberClient
 from google.oauth2 import service_account
 from google.pubsub_v1.types import pubsub
 from google.api_core.exceptions import NotFound
