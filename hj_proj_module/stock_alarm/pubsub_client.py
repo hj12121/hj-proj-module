@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class PubSubClient:
+    """PubSubClient v0.1.1"""
+
     def __init__(
         self,
         project_id: str,
@@ -33,17 +35,17 @@ class PubSubClient:
         self._subscription_name = subscription_name
 
         try:
-            logger.info("Creating Pub/Sub topic and subscription")
+            logger.info("Creating Pub/Sub topic and subscription if not exist")
             if topic_name:
                 logger.info(f"Creating publisher client")
-                self._publisher_client = pubsub_v1.PublisherClient(
+                self._publisher_client: PublisherClient = pubsub_v1.PublisherClient(
                     credentials=self._credentials
                 )
                 logger.info(f"Creating topic")
                 self._create_topic()
             if subscription_name:
                 logger.info(f"Creating subscriber client")
-                self._subscriber_client = pubsub_v1.SubscriberClient(
+                self._subscriber_client: SubscriberClient = pubsub_v1.SubscriberClient(
                     credentials=self._credentials
                 )
                 logger.info(f"Creating subscription")
@@ -63,7 +65,7 @@ class PubSubClient:
         )
 
     def _create_topic(self):
-        # Create the topic if not exists
+        # Check if the topic exists, if not, create the topic.
         try:
             self.topic: pubsub.Topic = self._publisher_client.get_topic(
                 request={"topic": self._topic_path}
@@ -81,7 +83,7 @@ class PubSubClient:
             raise
 
     def _create_subscription(self):
-        # Create the subscription if not exists
+        # Check if the subscription exists, if not, create the subscription.
         try:
             self.subscription = self._subscriber_client.get_subscription(
                 request={"subscription": self._subscription_path}
@@ -124,11 +126,12 @@ class PubSubClient:
             message.ack()
 
         # Subscribe to the specified subscription and start receiving messages
+        logger.info(
+            f"Subscribing to listen for messages on {self._subscription_path}...\n"
+        )
         streaming_pull_future = self._subscriber_client.subscribe(
             self._subscription_path, callback=wrapper
         )
-
-        logger.info(f"Listening for messages on {self._subscription_path}...\n")
 
         # Keep the script running to continue receiving messages
         try:
