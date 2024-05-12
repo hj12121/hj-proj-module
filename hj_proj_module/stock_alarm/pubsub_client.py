@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class PubSubClient:
-    """PubSubClient v0.1.1"""
+    """PubSubClient v0.1.2"""
 
     def __init__(
         self,
@@ -43,6 +43,9 @@ class PubSubClient:
                     credentials=self._credentials
                 )
                 logger.info(f"Creating topic")
+                self._topic_path = self._publisher_client.topic_path(
+                    self._project_id, self._topic_name
+                )
                 self._create_topic()
             if subscription_name:
                 logger.info(f"Creating subscriber client")
@@ -50,20 +53,13 @@ class PubSubClient:
                     credentials=self._credentials
                 )
                 logger.info(f"Creating subscription")
+                self._subscription_path = self._subscriber_client.subscription_path(
+                    self._project_id, self._subscription_name
+                )
                 self._create_subscription()
         except Exception:
             logger.exception("Failed to create Pub/Sub topic and subscription")
             raise
-
-    @property
-    def _topic_path(self):
-        return self._publisher_client.topic_path(self._project_id, self._topic_name)
-
-    @property
-    def _subscription_path(self):
-        return self._subscriber_client.subscription_path(
-            self._project_id, self._subscription_name
-        )
 
     def _create_topic(self):
         # Check if the topic exists, if not, create the topic.
